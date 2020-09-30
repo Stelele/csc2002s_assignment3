@@ -1,6 +1,6 @@
 .data
 inputRequest: .asciiz "Enter a series of 5 formulae:\n"
-outputInfo: .asciiz "\nThe values are:\n\n"
+outputInfo: .asciiz "The values are:\n"
 nextLine: .asciiz "\n"
 firstInput: .space 5
 secondInput: .space 5
