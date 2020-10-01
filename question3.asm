@@ -62,7 +62,6 @@ main:
                 addi	$t1, $t1, 5			# $t1 = $t1 + 5 
                 j		continueToNextIteration				# jump to continueToNextIteration
                 
-
             recursiveFunctionCallDone:
                 addi	$t1, $t5, 5		# $t1 = $t5 + 5
                 li		$t5, 0		# $t5 = 0
