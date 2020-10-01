@@ -66,8 +66,15 @@ main:
             mul     $t3, $t3, 5         # $t3 *= 5 to account for space allocations
 
             add		$t4, $t4, $t3		# $t4 = $t4 + $t3
-            move 	$a0, $t4		# $a0 = $t4
 
+            move 	$t1, $t4		# $t1 = $t4
+
+            #check if cell is also a formula then restart
+            lb		$t2, 0($t1)		# get byte at location stored in $t1
+            beq		$t2, 61, formulaEntered	# if $t2 == '=' then go to formulaEntered
+            
+            #output final value obtained
+            move 	$a0, $t4		# $a0 = $t4
             li		$v0, 4		# command to output a string
             syscall
             
