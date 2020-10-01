@@ -41,6 +41,8 @@ main:
     # print out values in stored spreadsheet
     li		$t0, 0		# $t0 =0  counter variable to track loop 
     la		$t1, userInput		# $t1 = starting address of space to store user input
+    li		$t5, 0		# $t5 = 0
+    
 
     outputInputLoop:
         beq		$t0, 5, endOutputInputLoop	# if $t0 == $t1 then got to endOutputInputLoop
@@ -54,11 +56,24 @@ main:
             move 	$a0, $t1		# $a0 = $t1
             li		$v0, 4		# command to output a string
             syscall
+
+            bne		$t5, 0, recursiveFunctionCallDone	# if $t5 != 0 then go to recursiveFunctionCallDone
             
-            j		finalLoopOperation				# jump to finalLoopOperation
+                addi	$t1, $t1, 5			# $t1 = $t1 + 5 
+                j		continueToNextIteration				# jump to continueToNextIteration
+                
+
+            recursiveFunctionCallDone:
+                addi	$t1, $t5, 5		# $t1 = $t5 + 5
+                li		$t5, 0		# $t5 = 0
+                
+            continueToNextIteration:
+                j		finalLoopOperation				# jump to finalLoopOperation
             
         # print cell being referenced
         formulaEntered:
+            li		$t5, 0		# $t5 = 0
+            
             lb		$t2, 1($t1)		# get byte 1 after location stored in $t1
             la		$t4, userInput		# $t4 = starting address of space to store user input
             
@@ -67,19 +82,22 @@ main:
 
             add		$t4, $t4, $t3		# $t4 = $t4 + $t3
 
+            move 	$t5, $t1		# $t5 = $t1 Backup $t1 address into $t5
             move 	$t1, $t4		# $t1 = $t4
 
             #check if cell is also a formula then restart
-            lb		$t2, 0($t1)		# get byte at location stored in $t1
+            lb		$t2, 0($t4)		# get byte at location stored in $t4
             beq		$t2, 61, formulaEntered	# if $t2 == '=' then go to formulaEntered
-            
+
             #output final value obtained
             move 	$a0, $t4		# $a0 = $t4
             li		$v0, 4		# command to output a string
             syscall
-            
-        finalLoopOperation:
-            addi	$t1, $t1, 5			# $t1 = $t1 + 5      
+
+            addi	$t5, $t5, 5			# $t5 = $t5 + 5
+            move 	$t1, $t5		# $t1 = $t5
+                   
+        finalLoopOperation:             
             addi	$t0, $t0, 1			# $t0 = $t1 + 1
             j		outputInputLoop				# jump to outputInputLoop
         
